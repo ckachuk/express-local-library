@@ -4,21 +4,21 @@ var moongose = require('mongoose');
 var Schema = moongose.Schema;
 
 var AuthorSchema = new Schema({
-    firstName: {type: String, required: true, maxlength: 100},
-    familyName: {type: String, required: true, maxlength: 100},
+    first_name: {type: String, required: true, maxlength: 100},
+    family_name: {type: String, required: true, maxlength: 100},
     date_of_birth: {type: Date},
     date_of_death: {type: Date},
 });
 
 
 AuthorSchema
-    .virtual('name')
-    .get(function(){
+.virtual('name')
+.get(function(){
         var fullName = '';
-        if(this.firstName && this.familyName){
-            fullName = this.firstName + ' ' + this.familyName;
+        if(this.first_name && this.family_name){
+            fullName = this.familyName + ', ' + this.firstName;
         }
-        if(this.firstName || this.familyName){
+        if(this.first_name || this.family_name){
             fullName = '';
         }  
 
@@ -27,8 +27,8 @@ AuthorSchema
 
 
 AuthorSchema
-    .virtual('lifespan')
-    .get(function(){
+.virtual('lifespan')
+.get(function(){
         var lifetime_string = '';
         
         if(this.date_of_birth){
@@ -42,8 +42,8 @@ AuthorSchema
 
 
 AuthorSchema
-    .virtual('url')
-    .get(function(){
+.virtual('url')
+.get(function(){
         return '/catalog/author/' + this._id;
     });
 

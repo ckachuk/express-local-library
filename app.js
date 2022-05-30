@@ -4,6 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose');
+var compression = require('compression');
+var helmet = require('helmet');
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -11,9 +14,10 @@ var catalogRouter = require('./routes/catalog');
 
 var app = express();
 
-
+app.use(helmet());
 //set up mongoose connection
-var mongoDB = 'mongodb+srv://carlk:elensar15@cluster0.ioola.mongodb.net/local_library?retryWrites=true&w=majority';
+var dev_db_url  = 'mongodb+srv://carlk:elensar15@cluster0.ioola.mongodb.net/local_library?retryWrites=true&w=majority';
+var mongoDB = process.env.MONGODB_URI || dev_db_url;
 
 mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
 var db = mongoose.connection;
@@ -27,6 +31,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(compression()); //Compress all routes
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
